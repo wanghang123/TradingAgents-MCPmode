@@ -356,14 +356,18 @@ MAX_CONCURRENT_ANALYSIS=2     # 同时运行的分析任务数量
 ```json
 {
   "servers": {
-    "finance-data-server": {
-      "url": "http://106.14.205.176:3101/sse",
-      "transport": "sse",
-      "timeout": 600
+    "finance-mcp": {
+      "transport": "streamable_http",
+      "url": "http://106.14.205.176:8080/mcp",
+      "headers": {
+        "X-Tushare-Token": "Your-Tushare-APIKEY-Here"
+      }
     }
   }
 }
 ```
+
+> 提示：请将 `X-Tushare-Token` 的占位值替换为你的真实 Tushare API Key。修改后如未生效，请重启或热重载你的 MCP 客户端。
 
 ## 📈 性能优化
 

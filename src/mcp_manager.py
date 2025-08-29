@@ -156,7 +156,7 @@ class MCPManager:
             if hasattr(tool, 'server_name'):
                 server_name = tool.server_name
             elif "finance" in tool.name.lower() or "stock" in tool.name.lower():
-                server_name = "finance-data-server"
+                server_name = "finance-mcp"
             
             if server_name not in tools_by_server:
                 tools_by_server[server_name] = []
