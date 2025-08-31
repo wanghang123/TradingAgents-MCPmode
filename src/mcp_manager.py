@@ -126,13 +126,57 @@ class MCPManager:
                 return False
             
             self.client = MultiServerMCPClient(config)
+            self.server_configs = config
             
-            # 获取所有可用工具
-            self.tools = await self.client.get_tools()
-            print(f"✅ 成功连接到MCP服务器，发现 {len(self.tools)} 个工具")
+            # 🔧 正在逐个获取服务器工具...
+            print("🔧 正在逐个获取服务器工具...")
+            all_tools = []
+            tools_by_server = {}
             
-            # 按服务器组织工具
-            self.tools_by_server = await self._organize_tools_by_server()
+            for server_name in self.server_configs.keys():
+                try:
+                    print(f"─── 正在从服务器 '{server_name}' 获取工具 ───")
+                    # 抑制MCP客户端的SSE解析错误日志（这些错误不影响功能）
+                    import logging
+                    mcp_logger = logging.getLogger('mcp')
+                    original_level = mcp_logger.level
+                    mcp_logger.setLevel(logging.CRITICAL)
+                    
+                    try:
+                        server_tools = await self.client.get_tools(server_name=server_name)
+                    finally:
+                        mcp_logger.setLevel(original_level)
+                    
+                    # 对工具名做合法化与去重
+                    unique_tools = []
+                    tool_names = set()
+                    
+                    for tool in server_tools:
+                        # 合法化工具名（去除特殊字符，只保留字母数字下划线）
+                        import re
+                        clean_name = re.sub(r'[^a-zA-Z0-9_]', '_', tool.name)
+                        
+                        # 去重检查
+                        if clean_name not in tool_names:
+                            tool_names.add(clean_name)
+                            # 如果工具名被修改了，更新工具对象
+                            if clean_name != tool.name:
+                                tool.name = clean_name
+                            unique_tools.append(tool)
+                        else:
+                            print(f"⚠️ 跳过重复工具: {tool.name} -> {clean_name}")
+                    
+                    tools_by_server[server_name] = unique_tools
+                    all_tools.extend(unique_tools)
+                    print(f"✅ 从 '{server_name}' 获取到 {len(unique_tools)} 个工具")
+                    
+                except Exception as e:
+                    print(f"⚠️ 从服务器 '{server_name}' 获取工具失败: {e}")
+                    tools_by_server[server_name] = []
+            
+            self.tools = all_tools
+            self.tools_by_server = tools_by_server
+            print(f"🎉 总计发现 {len(self.tools)} 个可用工具")
             
             return True
             
@@ -143,26 +187,7 @@ class MCPManager:
             self.tools = []
             self.tools_by_server = {}
             return False
-    
 
-    
-    async def _organize_tools_by_server(self) -> Dict[str, List]:
-        """按服务器组织工具"""
-        tools_by_server = {}
-        
-        for tool in self.tools:
-            # 尝试从工具名称或描述中推断服务器
-            server_name = "default"
-            if hasattr(tool, 'server_name'):
-                server_name = tool.server_name
-            elif "finance" in tool.name.lower() or "stock" in tool.name.lower():
-                server_name = "finance-mcp"
-            
-            if server_name not in tools_by_server:
-                tools_by_server[server_name] = []
-            tools_by_server[server_name].append(tool)
-        
-        return tools_by_server
     
     def get_tools_for_agent(self, agent_name: str) -> List:
         """获取指定智能体可用的工具列表"""
