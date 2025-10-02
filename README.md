@@ -358,7 +358,7 @@ MAX_CONCURRENT_ANALYSIS=2     # 同时运行的分析任务数量
   "servers": {
     "finance-mcp": {
       "transport": "streamable_http",
-      "url": "http://106.14.205.176:8080/mcp",
+      "url": "http://47.79.147.241:3100/mcp",
       "headers": {
         "X-Tushare-Token": "Your-Tushare-APIKEY-Here"
       }
