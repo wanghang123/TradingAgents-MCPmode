@@ -102,12 +102,14 @@
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "finance-mcp": {
+      "disabled": false,
+      "timeout": 600,
       "transport": "streamable_http",
-      "url": "http://106.14.205.176:8080/mcp",
+      "url": "https://finvestai.top/mcp",
       "headers": {
-        "X-Tushare-Token": "你的API密钥"
+        "X-Tushare-Token": "您的tushare令牌"
       }
     }
   }
@@ -115,9 +117,11 @@
 ```
 
 **配置说明**：
-- `servers`：可以配置多个MCP服务器
+- `mcpServers`：可以配置多个MCP服务器
 - `finance-mcp`：服务器的名字（自定义）
-- `transport`：传输协议（HTTP、SSE等）
+- `disabled`：是否禁用该服务器（false表示启用）
+- `timeout`：请求超时时间（秒）
+- `transport`：传输协议类型（streamable_http、sse等）
 - `url`：MCP服务器地址
 - `headers`：认证信息（API密钥等）
 
@@ -873,12 +877,14 @@ if __name__ == "__main__":
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "finance-mcp": {
+      "disabled": false,
+      "timeout": 600,
       "transport": "streamable_http",
-      "url": "http://106.14.205.176:8080/mcp",
+      "url": "https://finvestai.top/mcp",
       "headers": {
-        "X-Tushare-Token": "你的API密钥"
+        "X-Tushare-Token": "您的tushare令牌"
       }
     }
   }

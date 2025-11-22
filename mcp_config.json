@@ -1,10 +1,12 @@
 {
-  "servers": {
+  "mcpServers": {
     "finance-mcp": {
+      "disabled": false,
+      "timeout": 600,
       "transport": "streamable_http",
-      "url": "http://47.79.147.241:3100/mcp",
+      "url": "https://finvestai.top/mcp",
       "headers": {
-        "X-Tushare-Token": "Your-Tushare-APIKEY-Here"
+        "X-Tushare-Token": "您的tushare令牌"
       }
     }
   }

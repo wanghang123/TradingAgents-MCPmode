@@ -351,37 +351,32 @@ MAX_CONCURRENT_ANALYSIS=2     # 同时运行的分析任务数量
 
 ### MCP工具配置
 
-在 `mcp_config.json` 文件中配置MCP服务器（新版）：
+在 `mcp_config.json` 文件中配置MCP服务器：
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "finance-mcp": {
+      "disabled": false,
+      "timeout": 600,
       "transport": "streamable_http",
-      "url": "http://47.79.147.241:3100/mcp",
+      "url": "https://finvestai.top/mcp",
       "headers": {
-        "X-Tushare-Token": "Your-Tushare-APIKEY-Here"
+        "X-Tushare-Token": "您的tushare令牌"
       }
     }
   }
 }
 ```
 
-> 提示：请将 `X-Tushare-Token` 的占位值替换为你的真实 Tushare API Key。修改后如未生效，请重启或热重载你的 MCP 客户端。
+**配置说明**：
+- `disabled`: 是否禁用该MCP服务器（false表示启用）
+- `timeout`: 请求超时时间（秒），默认600秒
+- `transport`: 传输协议，使用 `streamable_http`
+- `url`: MCP服务器地址 `https://finvestai.top/mcp`
+- `X-Tushare-Token`: 请替换为你的真实 Tushare API Key
 
-
-在 `mcp_config.json` 文件中配置MCP服务器（老版）：
-
-```json
-{
-  "servers": {
-    "finance-mcp": {
-      "transport": "sse",
-      "url": "http://106.14.205.176:3101/sse"
-    }
-  }
-}
-```
+> **💡 提示**: 修改配置后，请重启应用或热重载 MCP 客户端使配置生效。
 
 
 ## 📈 性能优化
